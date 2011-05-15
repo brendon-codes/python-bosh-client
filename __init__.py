@@ -15,8 +15,6 @@ from xml.dom import minidom
 
 from django.conf import settings
 
-from jid import JID
-
 logging.basicConfig(level=settings.BOSH_LOG_LEVEL)
 
 TLS_XMLNS = 'urn:ietf:params:xml:ns:xmpp-tls'
