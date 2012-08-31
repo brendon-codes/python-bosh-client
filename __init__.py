@@ -119,7 +119,7 @@ class BOSHClient:
         }
         self.bosh_service = urlparse(bosh_service)
         self.logged_in = self.startSessionAndAuth(hold, wait)
-        logger.debug("BOSH Logged In: %s" % self.logged_in)
+        logger.debug("BOSH Logged In: %s", self.logged_in)
 
     def buildElement(self, name, child=None, attrs=None):
         """
