@@ -15,7 +15,8 @@ from xml.dom import minidom
 
 from django.conf import settings
 
-logging.basicConfig(level=settings.BOSH_LOG_LEVEL)
+logger = logging.getLogger('bosh_client')
+
 
 TLS_XMLNS = 'urn:ietf:params:xml:ns:xmpp-tls'
 SASL_XMLNS = 'urn:ietf:params:xml:ns:xmpp-sasl'
@@ -105,7 +106,7 @@ class BOSHClient:
         @param password
         @param bosh_service
         """
-        logging.info("Initialized BOSHClient")
+        logger.debug("Initialized BOSHClient")
         self.rid = random.randint(0, 10000000)
         self.jabberid = JID(jabberid)
         self.password = password
@@ -118,7 +119,7 @@ class BOSHClient:
         }
         self.bosh_service = urlparse(bosh_service)
         self.logged_in = self.startSessionAndAuth(hold, wait)
-        logging.info("Bosh, logged in: %d" % self.logged_in)
+        logger.debug("BOSH Logged In: %s" % self.logged_in)
 
     def buildElement(self, name, child=None, attrs=None):
         """
