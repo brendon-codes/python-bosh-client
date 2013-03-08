@@ -106,7 +106,8 @@ class BOSHClient:
         @param password
         @param bosh_service
         """
-        logger.debug("Initialized BOSHClient")
+        logger.debug("BOSHClient jabberid:%s; password:%s; bosh_service:%s",
+                     jabberid, password, bosh_service)
         self.rid = random.randint(0, 10000000)
         self.jabberid = JID(jabberid)
         self.password = password
