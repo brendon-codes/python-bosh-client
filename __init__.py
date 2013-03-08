@@ -232,7 +232,7 @@ class BOSHClient:
         return ret
 
     def startSessionAndAuth(self, hold='1', wait='2'):
-        """"
+        """
         Starts session and authenticates
 
         @author BrendonCrawford
