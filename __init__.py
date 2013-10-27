@@ -8,15 +8,16 @@ Author: Nathan Fritz
 Author: Jack Moffit
 """
 
+import logging
 import sys
 import os
-import httplib
 import uuid
 import random
 import base64
 from urlparse import urlparse
-import logging
 from xml.dom import minidom
+
+import requests
 
 
 logger = logging.getLogger('bosh_client')
@@ -102,6 +103,7 @@ class BOSHClient(object):
     logged_in = False
     headers = None
     bosh_service = None
+    request_session = None
 
     def __init__(self, jabberid, password, bosh_service, hold=1, wait=60):
         """
@@ -127,7 +129,11 @@ class BOSHClient(object):
             "Accept": "text/xml"
         }
         self.bosh_service = urlparse(bosh_service)
+        self.request_session = requests.Session()
+        self.request_session.headers.update(self.headers)
         self.logged_in = self.start_session_and_auth(hold, wait)
+        ## Close it
+        self.request_session.close()
         logger.debug("BOSH Logged In: %s", self.logged_in)
         return
 
@@ -203,13 +209,14 @@ class BOSHClient(object):
             Tuple[minidom.Element, String]
         """
         out = body.toxml()
-        conn = httplib.HTTPConnection(self.bosh_service.netloc)
-        conn.request("POST", self.bosh_service.path, out, self.headers)
-        response = conn.getresponse()
-        data = ''
-        if response.status == 200:
-            data = response.read()
-        conn.close()
+        response = \
+            self.request_session.post(
+                self.bosh_service.geturl(),
+                data=out)
+        if response.status_code == 200:
+            data = response.text
+        else:
+            data = ''
         doc = minidom.parseString(data)
         return (doc.documentElement, data)
 
